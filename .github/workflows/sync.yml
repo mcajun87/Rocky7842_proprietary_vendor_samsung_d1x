@@ -36,7 +36,11 @@ jobs:
           # 3. 切换并合并原作者的 lineage-23.2 分支
           git checkout lineage-23.2
           git checkout lineage-24.0
-          git merge upstream/lineage-23.2 --no-edit
+          git merge upstream/lineage-23.2 --no-edit || {
+            echo "发现代码冲突，无法自动合并，请手动检查。"
+            exit 1
+          }
+
           git merge upstream/lineage-24.0 --no-edit || {
             echo "发现代码冲突，无法自动合并，请手动检查。"
             exit 1
