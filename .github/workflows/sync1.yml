@@ -27,13 +27,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # 1. 添加原作者 upstream 仓库
-          git remote add upstream https://github.com/Rocky7842/twrp_bootable_recovery.git
+          git remote add upstream https://github.com/Rocky7842/proprietary_vendor_samsung_d1x.git
 
           # 2. 获取原作者所有分支的最新更新
           git fetch upstream
 
           # 3. ⚠️ 在这里填入你需要同步的所有分支名称（用空格隔开）
-          TARGET_BRANCHES=("android-12.1" "crdroid-17.0" "fox_16.0")
+          TARGET_BRANCHES=("lineage-23.2" "lineage-24.0" )
 
           # 4. 循环遍历并逐个分支合并推送
           for branch in "${TARGET_BRANCHES[@]}"; do
