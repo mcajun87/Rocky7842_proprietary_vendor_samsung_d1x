@@ -1,4 +1,4 @@
-name: Rocky7842_lineage-23.2_vendor_samsung_d1x
+name: Auto Sync Upstream (Multi-Branch)
 
 permissions:
   contents: write
@@ -18,26 +18,38 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+          fetch-depth: 0 # 拉取完整提交历史以支持多分支切换
 
-      - name: Sync upstream
+      - name: Sync multiple upstream branches
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # 1. 添加原作者 upstream 仓库
-          git remote add upstream https://github.com/Rocky7842/proprietary_vendor_samsung_d1x.git
+          git remote add upstream https://github.com/Rocky7842/twrp_bootable_recovery.git
 
-                   # 2. 获取原作者最新的分支信息
-          git fetch upstream lineage-23.2
+          # 2. 获取原作者所有分支的最新更新
+          git fetch upstream
 
-          # 3. 切换并合并原作者的 lineage-23.2 分支
-          git checkout lineage-23.2
-          git merge upstream/lineage-23.2 --no-edit || {
-            echo "发现代码冲突，无法自动合并，请手动检查。"
-            exit 1
-          }
+          # 3. ⚠️ 在这里填入你需要同步的所有分支名称（用空格隔开）
+          TARGET_BRANCHES=("android-12.1" "crdroid-17.0" "fox_16.0")
 
-          # 4. 推送到你自己的 Fork 仓库
-          git push origin lineage-23.2
+          # 4. 循环遍历并逐个分支合并推送
+          for branch in "${TARGET_BRANCHES[@]}"; do
+            echo "=========================================="
+            echo "正在同步分支: ${branch}"
+            echo "=========================================="
+
+            # 切换到对应分支（如果本地没有则创建并追踪）
+            git checkout -B "${branch}" "origin/${branch}" || git checkout -b "${branch}"
+
+            # 合并原作者的同名分支
+            if git merge "upstream/${branch}" --no-edit; then
+              echo "分支 ${branch} 合并成功，正在推送到你的 Fork 仓库..."
+              git push origin "${branch}"
+            else
+              echo "ERROR: 分支 ${branch} 存在代码冲突，跳过该分支推送，请手动检查。"
+              git merge --abort || true
+            fi
+          done
