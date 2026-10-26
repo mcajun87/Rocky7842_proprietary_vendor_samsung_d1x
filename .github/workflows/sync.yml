@@ -30,22 +30,14 @@ jobs:
           git remote add upstream https://github.com/Rocky7842/proprietary_vendor_samsung_d1x.git
 
           # 2. 获取原作者最新的分支信息
-          git fetch upstream lineage-23.2
           git fetch upstream lineage-24.0
 
-          # 3. 切换并合并原作者的 lineage-23.2 分支
-          git checkout lineage-23.2
+          # 3. 切换并合并原作者的 lineage-24.0 分支
           git checkout lineage-24.0
-          git merge upstream/lineage-23.2 --no-edit || {
-            echo "发现代码冲突，无法自动合并，请手动检查。"
-            exit 1
-          }
-
           git merge upstream/lineage-24.0 --no-edit || {
             echo "发现代码冲突，无法自动合并，请手动检查。"
             exit 1
           }
 
           # 4. 推送到你自己的 Fork 仓库
-          git push origin lineage-23.2
           git push origin lineage-24.0
