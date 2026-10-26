@@ -33,7 +33,7 @@ jobs:
           git fetch upstream
 
           # 3. 定义你需要同步的两个分支
-          TARGET_BRANCHES=("lineage-24.0" "lineage-23.2")
+          TARGET_BRANCHES=("lineage-24.0" )
 
           # 4. 循环遍历并逐个分支合并推送
           for branch in "${TARGET_BRANCHES[@]}"; do
